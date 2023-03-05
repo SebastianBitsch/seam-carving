@@ -10,11 +10,9 @@ class GradientMagnitude(ABC):
     @abstractmethod
     def grad(self, image: np.ndarray) -> np.ndarray:
         pass
-
-    def conv2d(self, img, krn):
-        """
-        Compute 2d convolution, stolen from stackoverflow
-        """
+    
+    def conv2d(self, img: np.ndarray, krn:np.ndarray) -> np.ndarray:
+        """ Compute 2d convolution, stolen from stackoverflow """
         is0, is1, ks0, ks1 = *img.shape, *krn.shape
         rs0, rs1 = is0 - ks0 + 1, is1 - ks1 + 1
         
@@ -69,8 +67,8 @@ class SobelGradientMagnitude(GradientMagnitude):
     def grad(self, image: np.ndarray) -> np.ndarray:
         """ https://pyimagesearch.com/2021/05/12/image-gradients-with-opencv-sobel-and-scharr/ """
         
-        gx = super.conv2d(image, self.gx_sobel)
-        gy = super.conv2d(image, self.gy_sobel)
+        gx = self.conv2d(image, self.gx_sobel)
+        gy = self.conv2d(image, self.gy_sobel)
         return np.sqrt(np.power(gx,2) + np.power(gy,2))
 
 
@@ -92,6 +90,6 @@ class ScharrGradientMagnitude(GradientMagnitude):
     def grad(self, image: np.ndarray) -> np.ndarray:
         """ https://pyimagesearch.com/2021/05/12/image-gradients-with-opencv-sobel-and-scharr/ """
         
-        gx = super.conv2d(image, self.gx_scharr)
-        gy = super.conv2d(image, self.gy_scharr)
+        gx = self.conv2d(image, self.gx_scharr)
+        gy = self.conv2d(image, self.gy_scharr)
         return np.sqrt(np.power(gx,2) + np.power(gy,2))
