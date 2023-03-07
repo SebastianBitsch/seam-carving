@@ -4,14 +4,15 @@ from PIL import Image
 
 from collections import defaultdict
 
-
 from gradientmagniture import GradientMagnitude
+
 
 class SeamCarver:
 
     def __init__(self, image: Image, grad_func: GradientMagnitude) -> None:
         self.im = np.asarray(image)
         self.im_gray = np.asarray(image.convert("L"))
+        
         self.grad_func = grad_func
         
     
@@ -32,7 +33,7 @@ class SeamCarver:
         return cumulative
 
     
-    def carve(self, vertically = True, num_seams:int = 200, carve_threshold: float = 0.3):
+    def carve(self, vertically:bool = True, num_seams:int = 200, carve_threshold: float = 0.3):
         self.im_grad = self.grad_func.grad(self.im_gray)
 
         self.cumulative = self._calc_cumulative_min_energy(self.im_grad, vertically)
@@ -47,6 +48,7 @@ class SeamCarver:
         return np.delete(self.im, mask, axis=vertically)
 
     
+
     def create_seams(self, cumulative:np.ndarray, num_seams:int, vertically = True) -> list[list]:
         if not vertically:
             cumulative = cumulative.T
@@ -62,8 +64,6 @@ class SeamCarver:
             start_index = np.argsort(cumulative[-1,:])[k]
             
             seam = [start_index]
-            cumulative[h-1, start_index] = 10000
-
             positions_filled[h-1].add(start_index)
 
             for i in range(h-1, 0, -1):
