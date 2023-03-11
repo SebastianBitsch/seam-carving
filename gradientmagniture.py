@@ -23,6 +23,9 @@ class GradientMagnitude(ABC):
         res = res.transpose(1, 3, 0, 2).reshape(rs0, rs1, -1).sum(axis = -1)
         
         return res
+    
+    def pad(self, im:np.ndarray) -> np.ndarray:
+        return np.pad(im, 1, 'edge')
 
 
 class ExactGradientMagnitude(GradientMagnitude):
@@ -37,7 +40,7 @@ class ExactGradientMagnitude(GradientMagnitude):
         """
         # The output image will be one pixel smaller on every edge
         h, w = image.shape
-        out = np.ones((h - 2, w - 2))
+        out = np.zeros((h - 2, w - 2))
 
         for y in range(1, w - 1):
             for x in range(1, h - 1):
@@ -46,7 +49,7 @@ class ExactGradientMagnitude(GradientMagnitude):
                 g = np.sqrt(gx ** 2 + gy ** 2)
                 out[x - 1, y - 1] = g
 
-        return out
+        return self.pad(out)
 
 
 class SobelGradientMagnitude(GradientMagnitude):
@@ -69,7 +72,8 @@ class SobelGradientMagnitude(GradientMagnitude):
         
         gx = self.conv2d(image, self.gx_sobel)
         gy = self.conv2d(image, self.gy_sobel)
-        return np.sqrt(np.power(gx,2) + np.power(gy,2))
+        out = np.sqrt(np.power(gx,2) + np.power(gy,2))
+        return self.pad(out)
 
 
 class ScharrGradientMagnitude(GradientMagnitude):
@@ -92,4 +96,5 @@ class ScharrGradientMagnitude(GradientMagnitude):
         
         gx = self.conv2d(image, self.gx_scharr)
         gy = self.conv2d(image, self.gy_scharr)
-        return np.sqrt(np.power(gx,2) + np.power(gy,2))
+        out = np.sqrt(np.power(gx,2) + np.power(gy,2))
+        return self.pad(out)
