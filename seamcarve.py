@@ -46,7 +46,7 @@ class SeamCarver:
             im[np.arange(0, im.shape[0]), self.seams[i],:] = red
         return im
 
-    def carve_seams(self, vertically:bool = True, num_seams:int = 200):
+    def carve_seams(self, vertically:bool = True, num_seams:int = np.inf):
         self.im_grad = self.grad_func.grad(self.im_gray)
 
         self.cumulative = self._calc_cumulative_min_energy(self.im_grad, vertically)
@@ -54,7 +54,9 @@ class SeamCarver:
         self.seams = self.create_seams(self.cumulative, num_seams, vertically)
         return self.seams
 
-        
+    def compress(self, vertically:bool=True, threshold_pct:float = 0.25):
+        self.carve_seams(vertically)
+        return self.remove_seams(self.im, threshold_pct, vertically)
 
     def remove_seams(self, fromim, carve_threshold:float = 0.1, vertically:bool = True):
         seams = np.array(self.seams)
