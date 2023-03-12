@@ -6,9 +6,10 @@ from collections import defaultdict
 
 from gradientmagniture import GradientMagnitude
 
+# Step by step: https://cs.brown.edu/courses/cs129/results/proj3/taox/
+
 def normalize(data):
     return (data - np.min(data)) / (np.max(data) - np.min(data))
-
 
 class SeamCarver:
 

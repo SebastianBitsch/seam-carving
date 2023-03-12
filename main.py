@@ -1,3 +1,5 @@
+import os
+from random import shuffle
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
@@ -8,8 +10,8 @@ from seamcarve import SeamCarver
 
 def plot(im, size = (10,10), cbar=False, cmap="viridis", title="Image"):
     height, width = im.shape[:2]
-    height *= 2
-    width *= 2
+    # height *= 2
+    # width *= 2
     margin=200 # pixels
     dpi=100. # dots per inch
 
@@ -51,7 +53,7 @@ def plot_demo(im):
     plot(seams_im, title=f"6: All seams carved")
 
     # Plot Removed slices ontop cummulative image
-    for i in [0.25, 0.2, 0.15, 0.1]:
+    for i in [0.25, 0.2, 0.15, 0.1, 0.05]:
         res1 = carver.remove_seams(carver.im, carve_threshold=i)
         res2 = carver.remove_seams(seams_im, carve_threshold=i)
         im_width = carver.im.shape[1]
@@ -61,17 +63,25 @@ def plot_demo(im):
     
 
 if __name__ == "__main__":
-    im = Image.open("images/tower.png")
 
-    # 1. Plot for demo
-    plot_demo(im)
+    path = "images"
+    im_names = [f for f in os.listdir(path) if not f.startswith('.')]
+
+    # im_names = ["dolphins.jpg"]
+    shuffle(im_names)
+
+    for im_name in im_names:
+        im = Image.open(f"{path}/{im_name}")
+
+        # 1. Plot for demo
+        plot_demo(im)
 
 
     # 2. Use as library
     grad = ExactGradientMagnitude()
     carver = SeamCarver(im, grad)
 
-    res = carver.compress()
-    plot(res)
+    # res = carver.compress()
+    # plot(res)
 
     
