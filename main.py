@@ -64,24 +64,35 @@ def plot_demo(im):
 
 if __name__ == "__main__":
 
-    path = "images"
-    im_names = [f for f in os.listdir(path) if not f.startswith('.')]
+    # path = "images"
+    # im_names = [f for f in os.listdir(path) if not f.startswith('.')]
 
-    # im_names = ["dolphins.jpg"]
-    shuffle(im_names)
+    # # im_names = ["dolphins.jpg"]
+    # shuffle(im_names)
 
-    for im_name in im_names:
-        im = Image.open(f"{path}/{im_name}")
+    # for im_name in im_names:
+    #     im = Image.open(f"{path}/{im_name}")
 
-        # 1. Plot for demo
-        plot_demo(im)
+    #     # 1. Plot for demo
+    #     plot_demo(im)
 
 
-    # 2. Use as library
-    grad = ExactGradientMagnitude()
-    carver = SeamCarver(im, grad)
+    # # 2. Use as library
+    # grad = ExactGradientMagnitude()
+    # carver = SeamCarver(im, grad)
 
     # res = carver.compress()
     # plot(res)
+    im = Image.open("images/tower.png").convert("L")
+    grad = ExactGradientMagnitude()
+
+    carver = SeamCarver(im, grad)
+
+    new_im = carver.seam_carve(n_seams=50)
+
+    plt.imshow(new_im, interpolation="none")
+    plt.show()
+
+    print(new_im.shape)
 
     
