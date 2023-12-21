@@ -16,3 +16,10 @@ plt.imshow(small_im, interpolation="none")
 plt.show()
 
 ```
+
+
+### Example output
+
+Before             |  After
+:-------------------------:|:-------------------------:
+![](images/example_before.png)  |  ![](images/example_after.png)
